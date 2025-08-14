@@ -1,0 +1,67 @@
+from django.shortcuts import render
+from django.contrib.auth import authenticate
+from .models import Account
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status as s
+from rest_framework.authtoken.models import Token
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated, AllowAny
+
+
+# Create your views here.
+class AuthenticatedAPIView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+
+class SignupView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        request.data["username"] = request.data["email"]
+        account = Account.objects.create_user(**request.data)
+        token = Token.objects.create(user=account)
+        return Response(
+            {"account": account.email, "token": token.key}, status=s.HTTP_201_CREATED
+        )
+
+
+class LoginView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get("email")
+        password = request.data.get("password")
+        account = authenticate(username=email, password=password)
+        if account:
+            token, created = Token.objects.get_or_create(user=account)
+            return Response({"token": token.key, "account": account.email})
+        else:
+            return Response(
+                "No account matching credentials", status=s.HTTP_404_NOT_FOUND
+            )
+
+
+class InfoView(AuthenticatedAPIView):
+    def get(self, request):
+        return Response({"email": request.user.email})
+
+
+class LogoutView(AuthenticatedAPIView):
+    def post(self, request):
+        request.user.auth_token.delete()
+        return Response(status=s.HTTP_204_NO_CONTENT)
+
+
+class MasterSignupView(APIView):
+    def post(self, request):
+        master_account = Account.objects.create_user(**request.data)
+        master_account.is_staff = True
+        master_account.is_superuser = True
+        master_account.save()
+        token = Token.objects.create(user=master_account)
+        return Response(
+            {"master_account": master_account.email, "token": token.key},
+            status=s.HTTP_201_CREATED,
+        )
