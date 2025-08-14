@@ -45,7 +45,13 @@ class LoginView(APIView):
 
 class InfoView(AuthenticatedAPIView):
     def get(self, request):
-        return Response({"email": request.user.email})
+        return Response(
+            {
+                "email": request.user.email,
+                "first_name": request.user.first_name,
+                "last_name": request.user.last_name,
+            }
+        )
 
 
 class LogoutView(AuthenticatedAPIView):

@@ -10,16 +10,6 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <header className="dashboard-header">
-        <h1>MacroMate Dashboard</h1>
-        <div className="user-info">
-          <span>Welcome, {user?.email}</span>
-          <button onClick={handleLogout} className="logout-btn">
-            Logout
-          </button>
-        </div>
-      </header>
-
       <main className="dashboard-content">
         <div className="welcome-section">
           <h2>Welcome to MacroMate!</h2>

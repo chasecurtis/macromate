@@ -1,6 +1,7 @@
 /* Homepage Styles */
 .homepage {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  width: 100%;
 }
 
 /* Hero Section */
@@ -11,6 +12,8 @@
   min-height: 70vh;
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .hero-content {
@@ -20,12 +23,19 @@
   grid-template-columns: 1fr 400px;
   gap: 60px;
   align-items: center;
+  width: 100%;
 }
 
-.hero-text h1 {
-  font-size: 3.5rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
+.hero-brand {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.hero-logo {
+  height: 250px;
+  width: 250px;
+  object-fit: contain;
 }
 
 .hero-text h2 {
@@ -33,6 +43,7 @@
   font-weight: 300;
   margin-bottom: 1rem;
   opacity: 0.9;
+  text-align: center;
 }
 
 .hero-subtitle {

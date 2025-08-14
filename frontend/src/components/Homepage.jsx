@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import macroMateLogo from "../assets/macromate_logo.png";
 import "./Homepage.css";
 
 const Homepage = () => {
@@ -43,7 +44,9 @@ const Homepage = () => {
       <section className="hero">
         <div className="hero-content">
           <div className="hero-text">
-            <h1>MacroMate</h1>
+            <div className="hero-brand">
+              <img src={macroMateLogo} alt="MacroMate" className="hero-logo" />
+            </div>
             <h2>Your Intelligent Meal Planning Companion</h2>
             <p className="hero-subtitle">
               Plan perfect meals that hit your macro goals, generate smart
@@ -69,7 +72,7 @@ const Homepage = () => {
           {/* Quick Login Form */}
           <div className="hero-login">
             <div className="login-card">
-              <h3>Get Started</h3>
+              <h3>Log in</h3>
 
               {error && (
                 <div className="error-message">
