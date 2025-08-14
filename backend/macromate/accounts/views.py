@@ -51,7 +51,7 @@ class InfoView(AuthenticatedAPIView):
 class LogoutView(AuthenticatedAPIView):
     def post(self, request):
         request.user.auth_token.delete()
-        return Response(status=s.HTTP_204_NO_CONTENT)
+        return Response("Account succesfully logged out", status=s.HTTP_204_NO_CONTENT)
 
 
 class MasterSignupView(APIView):
@@ -64,4 +64,91 @@ class MasterSignupView(APIView):
         return Response(
             {"master_account": master_account.email, "token": token.key},
             status=s.HTTP_201_CREATED,
+        )
+
+
+class CorsTestView(APIView):
+    """
+    Test view to verify CORS is working properly
+    """
+
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        """Simple GET request to test CORS"""
+        return Response(
+            {
+                "message": "CORS is working! GET request successful",
+                "timestamp": str(request.META.get("HTTP_DATE", "No date header")),
+                "origin": str(request.META.get("HTTP_ORIGIN", "No origin header")),
+                "user_agent": str(request.META.get("HTTP_USER_AGENT", "No user agent")),
+                "method": request.method,
+                "status": "success",
+            }
+        )
+
+    def post(self, request):
+        """POST request to test CORS with data"""
+        try:
+            data = (
+                request.data
+                if hasattr(request, "data")
+                else json.loads(request.body) if request.body else {}
+            )
+        except json.JSONDecodeError:
+            data = {"error": "Invalid JSON in request body"}
+
+        return Response(
+            {
+                "message": "CORS is working! POST request successful",
+                "received_data": data,
+                "origin": str(request.META.get("HTTP_ORIGIN", "No origin header")),
+                "content_type": str(
+                    request.META.get("CONTENT_TYPE", "No content type")
+                ),
+                "method": request.method,
+                "status": "success",
+            }
+        )
+
+    def options(self, request):
+        """Handle preflight OPTIONS request"""
+        return Response(
+            {
+                "message": "CORS preflight successful",
+                "method": request.method,
+                "status": "success",
+            }
+        )
+
+
+class CorsAuthTestView(AuthenticatedAPIView):
+    """
+    Test view to verify CORS works with authentication
+    """
+
+    def get(self, request):
+        """Test authenticated GET request with CORS"""
+        return Response(
+            {
+                "message": "CORS with authentication is working!",
+                "user": request.user.email,
+                "is_authenticated": request.user.is_authenticated,
+                "origin": str(request.META.get("HTTP_ORIGIN", "No origin header")),
+                "method": request.method,
+                "status": "success",
+            }
+        )
+
+    def post(self, request):
+        """Test authenticated POST request with CORS"""
+        return Response(
+            {
+                "message": "CORS with authentication POST is working!",
+                "user": request.user.email,
+                "received_data": request.data,
+                "origin": str(request.META.get("HTTP_ORIGIN", "No origin header")),
+                "method": request.method,
+                "status": "success",
+            }
         )
