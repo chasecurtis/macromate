@@ -57,7 +57,7 @@ class InfoView(AuthenticatedAPIView):
 class LogoutView(AuthenticatedAPIView):
     def post(self, request):
         request.user.auth_token.delete()
-        return Response("Account succesfully logged out", status=s.HTTP_204_NO_CONTENT)
+        return Response("Account successfully logged out", status=s.HTTP_204_NO_CONTENT)
 
 
 class MasterSignupView(APIView):

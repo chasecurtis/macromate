@@ -44,7 +44,8 @@ export const AuthProvider = ({ children }) => {
       const { token, account } = response.data;
 
       tokenManager.setToken(token);
-      setUser({ email: account });
+      const userInfo = await authAPI.getUserInfo();
+      setUser(userInfo.data);
       setIsAuthenticated(true);
 
       return { success: true };
@@ -62,7 +63,8 @@ export const AuthProvider = ({ children }) => {
       const { token, account } = response.data;
 
       tokenManager.setToken(token);
-      setUser({ email: account });
+      const userInfo = await authAPI.getUserInfo();
+      setUser(userInfo.data);
       setIsAuthenticated(true);
 
       return { success: true };

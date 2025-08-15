@@ -1,11 +1,12 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import macroMateLogo from "../assets/macromate_logo.png";
-import "./Navbar.css";
+import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
+import { ExitToApp } from "@mui/icons-material";
+import macromatelogo from "../assets/macromate_logo.png";
 
 const Navbar = () => {
-  const { isAuthenticated, user, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -14,65 +15,68 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar">
-      <div className="nav-container">
-        {/* Logo/Brand */}
-        <Link to="/" className="nav-logo">
-          <img src={macroMateLogo} alt="MacroMate" className="logo-image" />
-        </Link>
+    <AppBar position="static" sx={{ bgcolor: "#667eea" }}>
+      <Toolbar>
+        <Box
+          component={Link}
+          to={isAuthenticated ? "/dashboard" : "/"}
+          sx={{
+            flexGrow: 1,
+            textDecoration: "none",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <img
+            src={macromatelogo}
+            alt="MacroMate"
+            style={{ height: "110px", marginRight: "10px" }}
+          />
+        </Box>
 
-        {/* Navigation Links */}
-        <div className="nav-links">
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           {isAuthenticated ? (
-            // Authenticated user navigation
+            // Authenticated user navbar
             <>
-              <Link to="/dashboard" className="nav-link">
-                Dashboard
-              </Link>
-              <Link to="/recipes" className="nav-link">
-                Recipes
-              </Link>
-              <Link to="/selected-recipes" className="nav-link">
-                Selected Recipes
-              </Link>
-              <Link to="/meal-plan" className="nav-link">
-                Meal Plan
-              </Link>
-              <Link to="/shopping-list" className="nav-link">
-                Shopping List
-              </Link>
-
-              {/* User dropdown or info */}
-              <div className="user-section">
-                <span className="user-greeting">
-                  Hi, {user?.first_name || user?.email}
-                </span>
-                <button onClick={handleLogout} className="logout-btn">
-                  Logout
-                </button>
-              </div>
+              <Typography variant="body2">
+                Welcome, {user?.first_name || user?.email}!
+              </Typography>
+              <Button
+                color="inherit"
+                onClick={handleLogout}
+                startIcon={<ExitToApp />}
+                variant="outlined"
+                sx={{
+                  borderColor: "white",
+                  "&:hover": { borderColor: "white" },
+                }}
+              >
+                Logout
+              </Button>
             </>
           ) : (
-            // Non-authenticated user navigation
+            // Unauthenticated user navbar
             <>
-              <Link to="/login" className="nav-link">
+              <Button color="inherit" component={Link} to="/login">
                 Login
-              </Link>
-              <Link to="/signup" className="nav-link nav-signup">
+              </Button>
+              <Button
+                variant="outlined"
+                color="inherit"
+                component={Link}
+                to="/signup"
+                sx={{
+                  borderColor: "white",
+                  "&:hover": { borderColor: "white" },
+                }}
+              >
                 Sign Up
-              </Link>
+              </Button>
             </>
           )}
-        </div>
-
-        {/* Mobile menu button (for future mobile responsiveness) */}
-        <div className="mobile-menu-btn">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
-    </nav>
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 };
 

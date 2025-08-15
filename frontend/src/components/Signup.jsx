@@ -1,6 +1,18 @@
+// frontend/src/components/Signup.jsx
 import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
+import {
+  Box,
+  Container,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  Alert,
+  Grid,
+  useTheme,
+} from "@mui/material";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +26,7 @@ const Signup = () => {
 
   const { signup } = useAuth();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const handleChange = (e) => {
     setFormData({
@@ -39,77 +52,117 @@ const Signup = () => {
   };
 
   return (
-    <div className="signup-container">
-      <div className="signup-form">
-        <h2>Sign Up for MacroMate</h2>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        background: theme.customGradients.primary,
+        display: "flex",
+        alignItems: "center",
+        py: 4,
+      }}
+    >
+      <Container maxWidth="md">
+        <Paper
+          elevation={10}
+          sx={{
+            p: 4,
+            borderRadius: 3,
+            textAlign: "center",
+          }}
+        >
+          <Typography variant="h3" gutterBottom color="text.primary">
+            Sign Up for MacroMate
+          </Typography>
 
-        {error && (
-          <div className="error-message">
-            {typeof error === "string"
-              ? error
-              : "Signup failed. Please try again."}
-          </div>
-        )}
+          {error && (
+            <Alert severity="error" sx={{ mb: 3 }}>
+              {typeof error === "string"
+                ? error
+                : "Signup failed. Please try again."}
+            </Alert>
+          )}
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="first_name">First Name</label>
-            <input
-              type="text"
-              id="first_name"
-              name="first_name"
-              value={formData.first_name}
-              onChange={handleChange}
-              required
-            />
-          </div>
+          <Box component="form" onSubmit={handleSubmit}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="First Name"
+                  type="text"
+                  name="first_name"
+                  value={formData.first_name}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
 
-          <div className="form-group">
-            <label htmlFor="last_name">Last Name</label>
-            <input
-              type="text"
-              id="last_name"
-              name="last_name"
-              value={formData.last_name}
-              onChange={handleChange}
-              required
-            />
-          </div>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Last Name"
+                  type="text"
+                  name="last_name"
+                  value={formData.last_name}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
 
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Email"
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Password"
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </Grid>
 
-          <button type="submit" disabled={loading} className="submit-btn">
-            {loading ? "Creating Account..." : "Sign Up"}
-          </button>
-        </form>
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  size="large"
+                  disabled={loading}
+                  sx={{ mt: 2 }}
+                >
+                  {loading ? "Creating Account..." : "Sign Up"}
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
 
-        <p className="auth-link">
-          Already have an account? <Link to="/login">Login here</Link>
-        </p>
-      </div>
-    </div>
+          <Typography variant="body1" color="text.secondary" sx={{ mt: 3 }}>
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              style={{
+                color: theme.palette.primary.main,
+                textDecoration: "none",
+                fontWeight: 600,
+              }}
+            >
+              Login here
+            </Link>
+          </Typography>
+        </Paper>
+      </Container>
+    </Box>
   );
 };
 
