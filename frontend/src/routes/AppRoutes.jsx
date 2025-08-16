@@ -64,16 +64,16 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
-      {/* 
-      <Route
+
+      {/* <Route
         path="/meal-plan"
         element={
           <ProtectedRoute>
             <MealPlanSetup />
           </ProtectedRoute>
         }
-      />
-
+      /> */}
+      {/* 
       <Route
         path="/recipes"
         element={

@@ -69,7 +69,7 @@ const Homepage = () => {
         <Container maxWidth="lg">
           <Grid container spacing={7.5} alignItems="center">
             {/* Hero Text */}
-            <Grid item xs={12} md={8}>
+            <Grid size={{ xs: 12, md: 8 }}>
               <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                 <img
                   src={macromatelogo}
@@ -110,7 +110,7 @@ const Homepage = () => {
             </Grid>
 
             {/* Login Card */}
-            <Grid item xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <Card sx={{ p: 2 }}>
                 <CardContent>
                   <Typography
@@ -228,7 +228,7 @@ const Homepage = () => {
                   "Generate complete shopping lists with quantities and estimated prices for all your meal ingredients.",
               },
             ].map((feature, index) => (
-              <Grid item xs={12} md={4} key={index}>
+              <Grid size={{ xs: 12, md: 4 }} key={index}>
                 <Card sx={{ height: "100%", textAlign: "center" }}>
                   <CardContent sx={{ p: 4 }}>
                     <Box
@@ -303,7 +303,7 @@ const Homepage = () => {
                   "Discover new recipes that fit your goals and taste preferences",
               },
             ].map((benefit, index) => (
-              <Grid item xs={12} sm={6} md={3} key={index}>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                 <Box sx={{ p: 3, textAlign: "center" }}>
                   <Typography sx={{ fontSize: "2rem", mb: 2 }}>
                     {benefit.icon}

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "corsheaders",
     # local
     "accounts",
+    "meal_planning",
 ]
 
 MIDDLEWARE = [

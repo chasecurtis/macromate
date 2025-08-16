@@ -25,6 +25,16 @@ export const authAPI = {
     getUserInfo: () => api.get('/accounts/info')
 };
 
+// Macro goals API calls
+export const macroGoalAPI = {
+    // get user's current macro goals
+    get: () => api.get('/meal-planning/macro-goals/'),
+    // create new macro goals
+    create: (macroData) => api.post('/meal-planning/macro-goals/', macroData),
+    // update goals
+    update: (macroData) => api.put('/meal-planning/macro-goals/', macroData)
+}
+
 // Helper Functions for token management
 export const tokenManager = {
     setToken: (token) => localStorage.setItem('token', token),
@@ -32,5 +42,6 @@ export const tokenManager = {
     removeToken: () => localStorage.removeItem('token'),
     isAuthenticated: () => !!localStorage.getItem('token'),
 };
+
 
 export default api;

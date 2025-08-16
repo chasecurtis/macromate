@@ -10,7 +10,10 @@ import {
   useTheme,
   TextField,
   Grid,
+  InputAdornment,
+  Alert,
 } from "@mui/material";
+import { macroGoalAPI, authAPI } from "../services/api";
 
 const MacroSetup = () => {
   const [macroData, setMacroData] = useState({
@@ -24,19 +27,77 @@ const MacroSetup = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     // Handle form input changes
+    const { name, value } = e.target;
+
+    // Convert to Number and ensure its not negative
+    const newValue = value === "" ? 0 : Math.max(0, Number(value));
+
     setMacroData({
       ...macroData,
-      [e.target.name]: e.target.value,
+      [name]: newValue,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleFocus = (e) => {
+    const { name } = e.target;
+    // User clicks in number field and the number is 0, clear the 0
+    if (macroData[name] === 0) {
+      setMacroData({
+        ...macroData,
+        [name]: "",
+      });
+    }
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    // User clicks in number field and the number is empty, input a 1
+    if (value === "") {
+      setMacroData({
+        ...macroData,
+        [name]: 0,
+      });
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Check if all values are 0
+    if (
+      macroData.calories === 0 &&
+      macroData.carbohydrates === 0 &&
+      macroData.proteins === 0 &&
+      macroData.fats === 0
+    ) {
+      setError("Please enter at least one macro value greater than 0");
+      return;
+    }
+
     setLoading(true);
-    navigate("/meal-plan");
+    setError("");
+
+    try {
+      const result = await macroGoalAPI.create(macroData);
+      navigate("/meal-plan");
+    } catch (error) {
+      setError(error.response?.data || "Failed to save macro goals");
+    }
+
+    setLoading(false);
+  };
+
+  const isFormValid = () => {
+    return (
+      macroData.calories > 0 ||
+      macroData.carbohydrates > 0 ||
+      macroData.proteins > 0 ||
+      macroData.fats > 0
+    );
   };
 
   return (
@@ -55,9 +116,16 @@ const MacroSetup = () => {
           Tell us your daily macro targets to create the perfect meal plan
         </Typography>
 
+        {error && (
+          <Alert severity="error" sx={{ mb: 3 }}>
+            {typeof error === "string"
+              ? error
+              : "Saving macro goals failed. Please try again."}
+          </Alert>
+        )}
         <Box component="form" onSubmit={handleSubmit}>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 label="Calories"
@@ -65,11 +133,24 @@ const MacroSetup = () => {
                 name="calories"
                 value={macroData.calories}
                 onChange={handleChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
                 required
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">kcal</InputAdornment>
+                    ),
+                  },
+                  htmlInput: {
+                    min: 0,
+                    step: 1,
+                  },
+                }}
               />
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 label="Carbohydrates"
@@ -77,23 +158,49 @@ const MacroSetup = () => {
                 name="carbohydrates"
                 value={macroData.carbohydrates}
                 onChange={handleChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
                 required
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">g</InputAdornment>
+                    ),
+                  },
+                  htmlInput: {
+                    min: 0,
+                    step: 1,
+                  },
+                }}
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
-                label="Protein"
+                label="Proteins"
                 type="number"
                 name="proteins"
                 value={macroData.proteins}
                 onChange={handleChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
                 required
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">g</InputAdornment>
+                    ),
+                  },
+                  htmlInput: {
+                    min: 0,
+                    step: 1,
+                  },
+                }}
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 label="Fats"
@@ -101,17 +208,30 @@ const MacroSetup = () => {
                 name="fats"
                 value={macroData.fats}
                 onChange={handleChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
                 required
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">g</InputAdornment>
+                    ),
+                  },
+                  htmlInput: {
+                    min: 0,
+                    step: 1,
+                  },
+                }}
               />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 size="large"
-                disabled={loading}
+                disabled={loading || !isFormValid()}
                 sx={{ mt: 2 }}
               >
                 {loading ? "Generating Meals" : "Generate Meals"}
