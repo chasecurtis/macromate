@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import MacroGoal, ShoppingList, FavoriteRecipe
+from .models import MacroGoal, ShoppingList
 
 
 class MacroGoalSerializer(serializers.ModelSerializer):
@@ -48,31 +48,3 @@ class ShoppingListSerializer(serializers.ModelSerializer):
 
     def get_meal_type_summary(self, obj):
         return getattr(obj, "_meal_type_summary", {})
-
-
-class FavoriteRecipeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FavoriteRecipe
-        fields = [
-            "id",
-            "spoonacular_id",
-            "title",
-            "image_url",
-            "ready_in_minutes",
-            "servings",
-            "calories",
-            "protein",
-            "carbohydrates",
-            "fat",
-            "notes",
-            "rating",
-            "times_used",
-            "created_at",
-        ]
-        read_only_fields = ["id", "times_used", "created_at"]
-
-    def validate_rating(self, value):
-        """Ensure rating is between 1 and 5"""
-        if value is not None and (value < 1 or value > 5):
-            raise serializers.ValidationError("Rating must be between 1 and 5")
-        return value

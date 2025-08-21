@@ -5,12 +5,11 @@ from rest_framework import status as s
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from datetime import date, datetime, timedelta
-from .models import MacroGoal, ShoppingList, FavoriteRecipe
+from .models import MacroGoal, ShoppingList
 from meals.models import MealPlan
 from .serializers import (
     MacroGoalSerializer,
     ShoppingListSerializer,
-    FavoriteRecipeSerializer,
 )
 from .services import ShoppingListService
 
@@ -242,53 +241,4 @@ class WeeklyShoppingListView(AuthenticatedAPIView):
             return Response(
                 {"error": f"Error generating weekly shopping list: {str(e)}"},
                 status=s.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
-
-
-class FavoriteRecipeView(AuthenticatedAPIView):
-
-    def get(self, request):
-        """Get all favorite recipes for the user"""
-        favorites = FavoriteRecipe.objects.filter(account=request.user)
-        serializer = FavoriteRecipeSerializer(favorites, many=True)
-        return Response(serializer.data)
-
-    def post(self, request):
-        """Add a recipe to favorites"""
-        serializer = FavoriteRecipeSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(account=request.user)
-            return Response(serializer.data, status=s.HTTP_201_CREATED)
-        return Response(serializer.errors, status=s.HTTP_400_BAD_REQUEST)
-
-
-class FavoriteRecipeDetailView(AuthenticatedAPIView):
-
-    def patch(self, request, favorite_id):
-        """Update a favorite recipe"""
-        try:
-            favorite = FavoriteRecipe.objects.get(id=favorite_id, account=request.user)
-            serializer = FavoriteRecipeSerializer(
-                favorite, data=request.data, partial=True
-            )
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=s.HTTP_400_BAD_REQUEST)
-
-        except FavoriteRecipe.DoesNotExist:
-            return Response(
-                {"error": "Favorite recipe not found"}, status=s.HTTP_404_NOT_FOUND
-            )
-
-    def delete(self, request, favorite_id):
-        """Remove a recipe from favorites"""
-        try:
-            favorite = FavoriteRecipe.objects.get(id=favorite_id, account=request.user)
-            favorite.delete()
-            return Response({"message": "Recipe removed from favorites"})
-
-        except FavoriteRecipe.DoesNotExist:
-            return Response(
-                {"error": "Favorite recipe not found"}, status=s.HTTP_404_NOT_FOUND
             )
