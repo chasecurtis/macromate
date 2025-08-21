@@ -9,10 +9,10 @@ import Login from "../components/Login";
 import Dashboard from "../components/Dashboard";
 import Homepage from "../components/Homepage";
 import MacroSetup from "../components/MacroSetup";
-// import MealPlanSetup from "../components/MealPlanSetup";
-// import RecipeSelection from "../components/RecipeSelection";
-// import ShoppingList from "../components/ShoppingList";
-// import FavoriteRecipes from "../components/FavoriteRecipes";
+import MealPlanSetup from "../components/MealPlanSetup";
+import RecipeSelection from "../components/RecipeSelection";
+import ShoppingList from "../components/ShoppingList";
+import MyMeals from "../components/MyMeals";
 
 // Smart Homepage Component - shows different content based on auth
 const SmartHomepage = () => {
@@ -65,17 +65,17 @@ const AppRoutes = () => {
         }
       />
 
-      {/* <Route
+      <Route
         path="/meal-plan"
         element={
           <ProtectedRoute>
             <MealPlanSetup />
           </ProtectedRoute>
         }
-      /> */}
-      {/* 
+      />
+
       <Route
-        path="/recipes"
+        path="/recipes/:recipeId"
         element={
           <ProtectedRoute>
             <RecipeSelection />
@@ -93,16 +93,19 @@ const AppRoutes = () => {
       />
 
       <Route
-        path="/favorites"
+        path="/my-meals"
         element={
           <ProtectedRoute>
-            <FavoriteRecipes />
+            <MyMeals />
           </ProtectedRoute>
         }
-      /> */}
+      />
 
       {/* Smart homepage - shows different content based on auth status */}
       <Route path="/" element={<SmartHomepage />} />
+
+      {/* Catch all route - redirect to homepage */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 };

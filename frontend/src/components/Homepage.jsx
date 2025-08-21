@@ -1,4 +1,3 @@
-// frontend/src/components/Homepage.jsx
 import macromatelogo from "../assets/macromate_logo.png";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";

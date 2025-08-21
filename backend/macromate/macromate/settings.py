@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # local
     "accounts",
     "meal_planning",
+    "meals",
 ]
 
 MIDDLEWARE = [
@@ -178,3 +179,5 @@ CORS_ALLOW_METHODS = [
     "POST",
     "PUT",
 ]
+
+SPOONACULAR_API_KEY = config("SPOONACULAR_API_KEY")
